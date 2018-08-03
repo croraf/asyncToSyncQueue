@@ -1,22 +1,20 @@
 
 const queue = [];
 
-const processQueue = () => {
+const processQueue = async () => {
 
     console.log('Processing queue, element:', queue[0]);
     
-    queue[0]().then(
-        (value) => {
-            console.log('promise finished with value:', value);
-            queue.shift();
-            if (queue.length > 0) {processQueue();}
-        },
-        (reason) => {
-            console.log('promise failed with reason:', reason);
-            queue.shift();
-            if (queue.length > 0) {processQueue();}
-        }
-    );
+    try {
+        const result = await queue[0]();
+        console.log('Async function finished with result:', result);
+    } catch (error) {
+        console.log('Promise error:', error);
+    }
+    
+    queue.shift();
+    
+    if (queue.length > 0) {processQueue();}
 };
 
 const putOnAsyncToSyncQueue = (asyncJobCreator) => {
