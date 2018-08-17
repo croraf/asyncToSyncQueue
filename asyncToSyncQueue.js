@@ -1,15 +1,16 @@
+const logger = require('./logger');
 
 const queue = [];
 
 const processQueue = async () => {
 
-    console.log('Processing queue, element:', queue[0]);
+    logger.info('Processing queue, element:', queue[0]);
     
     try {
         const result = await queue[0]();
-        console.log('Async function finished with result:', result);
+        logger.info('Async function finished with result: %s', result);
     } catch (error) {
-        console.log('Promise error:', error);
+        logger.info('Promise error: %s', error);
     }
     
     queue.shift();
@@ -22,7 +23,7 @@ const putOnAsyncToSyncQueue = (asyncJobCreator) => {
     queue.push(asyncJobCreator);
 
     if (queue.length === 1) {
-        console.log('New job put on empty queue.');
+        logger.info('New job put on empty queue.');
         processQueue();
     }
 };
